@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des incidents - EPSI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            text-align: center;
+            background-image: url('{{ url_for('static', filename='rdc.png') }}');
+            background-size: 80%;
+            background-position: center;
+            position: relative;
+            height: 100vh;
+            margin-top: 0;
+            padding-top: 50px; /* Ajuste la position du contenu */
+            color: #333; /* Couleur du texte */
+            overflow: hidden; /* Permet le défilement */
+        }
+        h1 {
+            margin: 0;
+            padding: 20px;
+            color: #261b12;
+            font-size: 2em;
+            position: relative;
+            z-index: 1; /* Assurez-vous qu'il reste au-dessus de l'arrière-plan */
+            background-color: transparent; /* Pas de fond */
+            top: -50px; /* Positionne le titre plus haut, en dehors du plan */
+        }
+        
+        .salle {
+            position: absolute;
+            padding: 10px 20px;
+            color: white;
+            background-color: #4CAF50; /* Vert */
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            z-index: 2;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        .salle:hover {
+            background-color: #45a049; /* Couleur au survol */
+            transform: translateY(-2px); /* Effet de levage au survol */
+        }
+        .importance-rouge {
+            background-color: #f44336;
+        }
+        .importance-orange {
+            background-color: #ff9800;
+        }
+        .importance-jaune {
+            background-color: #ffc107;
+        }
+        .form-container {
+            display: none;
+            position: fixed; /* Position fixe */
+            bottom: 20px; /* 20px du bas de la fenêtre */
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            z-index: 3;
+            width: 300px; /* Largeur du formulaire */
+
+        }
+        .form-container input, .form-container select {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        .form-container input:focus, .form-container select:focus {
+            border-color: #4CAF50; /* Couleur de bordure au focus */
+            outline: none; /* Enlève le contour par défaut */
+        }
+        .form-container button {
+            background-color: #4CAF50; /* Vert */
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+            font-size: 16px;
+            width: 100%; /* Boutons prennent toute la largeur */
+            margin-top: 10px; /* Ajoute un espace au-dessus des boutons */
+        }
+        .form-container button:hover {
+            background-color: #45a049; /* Couleur au survol */
+            transform: translateY(-2px); /* Effet de levage au survol */
+        }
+        .form-container button:active {
+            transform: translateY(0); /* R
+            établir l'effet lors du clic */
+        }
+        .footer-link {
+            display: block;
+            margin-top: 500px; /* Espace au-dessus du lien */
+            color: black; /* Couleur du texte du lien */
+            text-decoration: underline; /* Texte souligné */
+            font-size: 1em; /* Taille de la police */
+        }
+    </style>
+</head>
+<body>
+    <h1>Gestion des incidents - EPSI</h1>
+
+    <button class="salle" style="left: 860px; top: 130px;" onclick="ouvrirFormulaire('Amphi 1')">Amphi 1</button>
+    <button class="salle" style="left: 860px; top: 210px;" onclick="ouvrirFormulaire('Amphi 2')">Amphi 2</button>
+    <button class="salle" style="left: 770px; top: 150px;" onclick="ouvrirFormulaire('Accueil')">Accueil</button>
+    <button class="salle" style="left: 710px; top: 210px;" onclick="ouvrirFormulaire('Peda')">Peda</button>
+    <button class="salle" style="left: 450px; top: 225px;" onclick="ouvrirFormulaire('Halle des salles des cours')">Halle des salles des cours</button>
+    <button class="salle" style="left: 450px; top: 150px;" onclick="ouvrirFormulaire('Salle 1')">Salle 1</button>
+    <button class="salle" style="left: 450px; top: 320px;" onclick="ouvrirFormulaire('Salle 2')">Salle 2</button>
+    <button class="salle" style="left: 330px; top: 235px;" onclick="ouvrirFormulaire('Salle 3')">Salle 3</button>
+
+    <div class="form-container" id="form-container">
+        <h2>Signaler un incident</h2>
+        <form id="incident-form" onsubmit="event.preventDefault(); signalerIncident();">
+            <input type="text" id="nom" placeholder="Nom" required>
+            <input type="text" id="prenom" placeholder="Prénom" required>
+            <input type="text" id="date_naissance" placeholder="Date de naissance (JJ/MM/AAAA)" required>
+            <label for="categorie">Catégorie de problème :</label>
+            <select id="categorie" required>
+                <option value="">-- Sélectionner --</option>
+                <option value="technique">Problème technique</option>
+                <option value="infrastructure">Problème d'infrastructure</option>
+                <option value="materiel">Problème matériel</option>
+                <option value="autre">Autre</option>
+            </select>
+            <label for="importance">Importance :</label>
+            <select id="importance" required>
+                <option value="">-- Sélectionner --</option>
+                <option value="mineur">Mineur</option>
+                <option value="moyen">Modéré</option>
+                <option value="majeur">Majeur</option>
+            </select>
+            <input type="hidden" id="salle-input">
+            <button type="submit">Envoyer</button>
+            <button type="button" onclick="fermerFormulaire()">Annuler</button>
+        </form>
+    </div>
+    <a href="/login" class="footer-link">Connectez-vous en tant qu'admin</a>
+
+
+    <script>
+        function ouvrirFormulaire(salle) {
+            document.getElementById('form-container').style.display = 'block';
+            document.getElementById('salle-input').value = salle; // Stocker le nom de la salle dans un champ caché
+        }
+
+        function fermerFormulaire() {
+            document.getElementById('form-container').style.display = 'none';
+        }
+
+        function signalerIncident() {
+            const salle = document.getElementById('salle-input').value;
+            const nom = document.getElementById('nom').value;
+            const prenom = document.getElementById('prenom').value;
+            const date_naissance = document.getElementById('date_naissance').value;
+            const categorie = document.getElementById('categorie').value;
+            const importance = document.getElementById('importance').value;
+
+            fetch('/signaler_incident', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ salle, nom, prenom, date_naissance, categorie, importance })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.importance) {
+                    const salleButton = document.querySelector(`button[onclick="ouvrirFormulaire('${salle}')"]`);
+                    salleButton.classList.remove('importance-rouge', 'importance-orange', 'importance-jaune');
+                    if (data.importance === 'majeur') {
+                        salleButton.classList.add('importance-rouge');
+                    } else if (data.importance === 'moyen') {
+                        salleButton.classList.add('importance-orange');
+                    } else if (data.importance === 'mineur') {
+                        salleButton.classList.add('importance-jaune');
+                    }
+                }
+                alert(data.message);
+                fermerFormulaire(); // Ferme le formulaire après l'envoi
+            });
+        }
+    </script>
+   
+</body> 
+</html>

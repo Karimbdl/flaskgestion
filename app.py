@@ -71,10 +71,13 @@ def admin():
         return redirect(url_for('login'))  # Redirige vers la page de connexion si non authentifié
     return render_template('admin.html', incidents=incidents)
 
-@app.route('/logout')
+@app.route('/logout', methods=['GET', 'POST'])
 def logout():
-    session.pop('username', None)  # Déconnexion
-    return redirect(url_for('login'))
+    if request.method == 'POST':
+        session.pop('username', None)  # Déconnexion
+        return redirect(url_for('index'))  # Redirige vers la page d'accueil
+    return redirect(url_for('index'))  # Redirige par défaut
+
 
 if __name__ == '__main__':
     app.run(debug=True)

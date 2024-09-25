@@ -16,7 +16,19 @@
             margin: 0;
             color: #333; /* Couleur du texte */
             padding-top: 50px; /* Ajuste la position du contenu */
-        }
+            button {
+                background-color: red; /* Couleur de fond rouge */
+                color: white; /* Couleur du texte en blanc */
+                padding: 10px 20px; /* Espacement à l'intérieur du bouton */
+                border: none; /* Suppression de la bordure */
+                border-radius: 5px; /* Coins arrondis */
+                cursor: pointer; /* Curseur en forme de main lors du survol */
+                font-size: 16px; /* Taille de police */
+                margin-top: 20px; /* Espacement au-dessus du bouton */
+            }
+            button:hover {
+                background-color: darkred; /* Couleur au survol */
+            }        }
         h1 {
             color: #261b12;
             margin-top: 20px;
@@ -63,5 +75,9 @@
             {% endfor %}
         </tbody>
     </table>
+    <form action="{{ url_for('logout') }}" method="post">
+        <button type="submit">Déconnexion</button>
+    </form>
+    
 </body>
 </html>

@@ -9,32 +9,31 @@
         body {
             font-family: 'Poppins', sans-serif;
             text-align: center;
-            background-size: 80%;
-            background-position: center;
-            position: relative;
-            height: 100vh;
+            background-size: cover;
             margin: 0;
-            color: #333; /* Couleur du texte */
-            padding-top: 50px; /* Ajuste la position du contenu */
-            button {
-                background-color: red; /* Couleur de fond rouge */
-                color: white; /* Couleur du texte en blanc */
-                padding: 10px 20px; /* Espacement à l'intérieur du bouton */
-                border: none; /* Suppression de la bordure */
-                border-radius: 5px; /* Coins arrondis */
-                cursor: pointer; /* Curseur en forme de main lors du survol */
-                font-size: 16px; /* Taille de police */
-                margin-top: 20px; /* Espacement au-dessus du bouton */
-            }
-            button:hover {
-                background-color: darkred; /* Couleur au survol */
-            }        }
-        h1 {
-            color: #261b12;
+            color: #333;
+            padding: 20px;
+        }
+        button {
+            background-color: red;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
             margin-top: 20px;
         }
+        button:hover {
+            background-color: darkred;
+        }
+        h1 {
+            color: #261b12;
+            margin: 20px 0;
+        }
         table {
-            width: 80%;
+            width: 100%;
+            max-width: 800px;
             margin: 20px auto;
             border-collapse: collapse;
         }
@@ -44,8 +43,17 @@
             text-align: left;
         }
         th {
-            background-color: #4CAF50; /* Couleur d'arrière-plan pour l'en-tête */
+            background-color: #4CAF50;
             color: white;
+        }
+        @media (max-width: 600px) {
+            button {
+                width: 100%;
+                font-size: 14px;
+            }
+            table {
+                font-size: 14px;
+            }
         }
     </style>
 </head>
@@ -78,6 +86,5 @@
     <form action="{{ url_for('logout') }}" method="post">
         <button type="submit">Déconnexion</button>
     </form>
-    
 </body>
 </html>

@@ -135,5 +135,10 @@ def logout():
         return redirect(url_for('index'))  # Redirige vers la page d'accueil
     return redirect(url_for('index'))  # Redirige par défaut
 
+@app.route('/accueil')
+def accueil():
+    return render_template('accueil.html')
+
+
 if __name__ == '__main__':
     app.run(debug=True)

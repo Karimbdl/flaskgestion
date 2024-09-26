@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Gestion des Incidents - EPSI</title>
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="/static/styles.css" rel="stylesheet" />
+    <style>
+        body {
+            background-color: #e9ecef; /* Couleur de fond gris clair pour toute la page */
+            background-image: url('/static/bg.avif'); /* Remplacez par votre image de fond */
+            background-size: cover; /* Ajuste l'image de fond pour couvrir toute la page */
+            background-repeat: no-repeat; /* Empêche la répétition de l'image de fond */
+        }
+        .content-container {
+            display: flex;
+            background-color: rgba(255, 255, 255, 0.8); /* Fond blanc avec opacité */
+            padding: 20px;
+            margin: 20px;
+            border-radius: 8px;
+            align-items: center; /* Centre le contenu verticalement */
+            justify-content: center; /* Centre le contenu horizontalement */
+        }
+        .image {
+            max-width: 300px; /* Limite la largeur de l'image */
+            margin-right: 20px;
+        }
+        .text-block {
+            max-width: 500px; /* Limite la largeur du texte */
+        }
+    </style>
+</head>
+<body>
+    <!-- Responsive navbar-->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#!">Epsi Incident Manager</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><p><a href="{{ url_for('index') }}" class="nav-link">Signaler</a></p></li>
+                    <li class="nav-item"><a href="/login" class="nav-link">Connectez-vous en tant qu'admin</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header sans fond d'image -->
+    <header class="py-5">
+        <div class="text-center my-5">
+            <h1 class="text-dark fs-3 fw-bolder">Gestion des Incidents</h1>
+            <p class="text-dark-50 mb-0">Application pour signaler les incidents</p>
+        </div>
+    </header>
+
+    <!-- New Content Section -->
+    <div class="content-container">
+        <img class="image" src="/static/2024-07-03.jpg" alt="Image Epsi" />
+        <div class="text-block">
+            <h2>Epsi Incident Manager</h2>
+            <p>Bienvenue dans l'application de gestion des incidents. Ici, vous pouvez signaler et suivre les incidents de manière efficace.</p>
+        </div>
+    </div>
+
+
+    <!-- Bootstrap core JS-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Core theme JS-->
+    <script src="js/scripts.js"></script>
+</body>
+</html>

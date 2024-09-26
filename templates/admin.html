@@ -31,6 +31,14 @@
             color: #261b12;
             margin: 20px 0;
         }
+        input[type="text"] {
+            width: 50%;
+            padding: 10px;
+            font-size: 16px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
         table {
             width: 100%;
             max-width: 800px;
@@ -45,6 +53,17 @@
         th {
             background-color: #4CAF50;
             color: white;
+            cursor: pointer;
+        }
+        th.sortable {
+            position: relative;
+        }
+        th.sortable:after {
+            content: '⇅';
+            position: absolute;
+            right: 10px;
+            font-size: 12px;
+            top: 12px;
         }
         @media (max-width: 600px) {
             button {
@@ -59,15 +78,21 @@
 </head>
 <body>
     <h1>Gestion des incidents - EPSI - Admin</h1>
-    <table>
+
+    <!-- Barre de recherche -->
+    <input type="text" id="searchInput" onkeyup="searchTable()" placeholder="Rechercher par nom ou prénom...">
+
+    <table id="incidentTable">
         <thead>
             <tr>
                 <th>Salle</th>
                 <th>Nom</th>
                 <th>Prénom</th>
                 <th>Date de naissance</th>
-                <th>Importance</th>
+                <th class="sortable" onclick="sortTableByImportance()">Importance</th>
                 <th>Heure du signalement</th>
+                <th>Status</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -79,12 +104,99 @@
                 <td>{{ incident.date_naissance }}</td>
                 <td>{{ incident.importance }}</td>
                 <td>{{ incident.timestamp }}</td>
+                <td>{{ incident.status }}</td>
+                <td>
+                    <button onclick="resoudreIncident('{{ salle }}')">En cours</button>
+                    <button onclick="supprimerIncident('{{ salle }}')">Supprimer</button>
+                </td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
+
     <form action="{{ url_for('logout') }}" method="post">
         <button type="submit">Déconnexion</button>
     </form>
+
+    <script>
+        let sortOrderImportance = 1;  // Variable pour garder l'état du tri par importance
+
+        // Tri par importance
+        function sortTableByImportance() {
+            const importanceLevels = {
+                'mineur': 1,
+                'moyen': 2,
+                'majeur': 3
+            };
+
+            const table = document.getElementById('incidentTable');
+            const rowsArray = Array.from(table.rows).slice(1);  // Ignorer l'en-tête du tableau
+
+            rowsArray.sort((a, b) => {
+                const importanceA = importanceLevels[a.cells[4].innerText.toLowerCase()] || 0;
+                const importanceB = importanceLevels[b.cells[4].innerText.toLowerCase()] || 0;
+
+                return sortOrderImportance * (importanceA - importanceB);
+            });
+
+            // Ajouter les lignes triées au tableau
+            for (const row of rowsArray) {
+                table.tBodies[0].appendChild(row);
+            }
+
+            sortOrderImportance *= -1;  // Inverser l'ordre du tri pour le prochain clic
+        }
+
+        // Fonction de recherche
+        function searchTable() {
+            const input = document.getElementById('searchInput');
+            const filter = input.value.toLowerCase();
+            const table = document.getElementById('incidentTable');
+            const rows = table.getElementsByTagName('tr');
+
+            // Boucle à travers toutes les lignes de la table, en masquant celles qui ne correspondent pas à la recherche
+            for (let i = 1; i < rows.length; i++) {
+                const nom = rows[i].getElementsByTagName('td')[1].innerText.toLowerCase();
+                const prenom = rows[i].getElementsByTagName('td')[2].innerText.toLowerCase();
+                
+                // Vérification si le nom ou le prénom correspondent au filtre
+                if (nom.includes(filter) || prenom.includes(filter)) {
+                    rows[i].style.display = '';
+                } else {
+                    rows[i].style.display = 'none';
+                }
+            }
+        }
+
+        // Désactiver le tri par défaut pour les autres colonnes si besoin (ici, pas de tri pour la colonne des noms par exemple)
+        function resoudreIncident(salle) {
+            fetch('/resoudre_incident', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ salle: salle })
+            })
+            .then(response => response.json())
+            .then(data => alert(data.message))
+            .catch(error => console.error('Erreur:', error));
+        }
+
+        function supprimerIncident(salle) {
+            fetch('/supprimer_incident', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ salle: salle })
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                location.reload();
+            })
+            .catch(error => console.error('Erreur:', error));
+        }
+    </script>
 </body>
 </html>

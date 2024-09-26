@@ -96,9 +96,9 @@
             </tr>
         </thead>
         <tbody>
-            {% for salle, incident in incidents.items() %}
+            {% for incident in incidents %}
             <tr>
-                <td>{{ salle }}</td>
+                <td>{{ incident.salle }}</td>
                 <td>{{ incident.nom }}</td>
                 <td>{{ incident.prenom }}</td>
                 <td>{{ incident.date_naissance }}</td>
@@ -106,12 +106,13 @@
                 <td>{{ incident.timestamp }}</td>
                 <td>{{ incident.status }}</td>
                 <td>
-                    <button onclick="resoudreIncident('{{ salle }}')">En cours</button>
-                    <button onclick="supprimerIncident('{{ salle }}')">Supprimer</button>
+                    <button onclick="resoudreIncident('{{ incident.salle }}')">En cours</button>
+                    <button onclick="supprimerIncident('{{ incident.salle }}')">Supprimer</button>
                 </td>
             </tr>
             {% endfor %}
         </tbody>
+        
     </table>
 
     <form action="{{ url_for('logout') }}" method="post">
